@@ -11,16 +11,28 @@ chatsRouter.post(
   triggerBadRequest,
   async (req, res, next) => {
     try {
-      const { users, name } = req.body;
+      const { users, name, avatar, messages } = req.body;
       const userCombination = [req.user._id, ...users];
-      const existingChat = ChatsModel.find({
+      const existingChat = await ChatsModel.findOne({
         users: { $all: userCombination },
       });
+
+      let chatAvatar = avatar; // default to provided avatar
+      if (users.length === 1) {
+        // for one-to-one chat, we use the avatars of the users in FE
+        chatAvatar = ""; // or some other placeholder value for FE to fill in
+      } else if (!avatar) {
+        // for group chat, we use a default URL if no avatar is provided
+        chatAvatar =
+          "https://icon-library.com/images/group-chat-icon/group-chat-icon-16.jpg";
+      }
+
       if (!existingChat) {
         const newChat = new ChatsModel({
-          ...req.body,
-          users: userCombination,
+          users: [...userCombination],
           name,
+          avatar: chatAvatar,
+          messages,
         });
         const { _id } = await newChat.save();
         res.status(201).send(`Chat with id ${_id} was created successfully`);
