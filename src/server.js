@@ -9,7 +9,11 @@ import {
   forbiddenErrorHandler,
 } from "./errorHandlers.js";
 import mongoose from "mongoose";
+
+import chatsRouter from "./chats/index.js";
+
 import userRouter from "./api/users/index.js";
+
 
 const server = express();
 const port = process.env.PORT;
@@ -18,7 +22,13 @@ server.use(cors());
 server.use(express.json());
 
 // ..................ENDPOINTS..................
+
+
+server.use("/chats", chatsRouter);
+
+
 server.use("/users", userRouter);
+
 // ..................ERROR HANDLERS............
 
 server.use(badRequestHandler); // 400
