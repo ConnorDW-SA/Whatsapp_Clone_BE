@@ -2,11 +2,13 @@ import express from "express";
 import { checksChatsSchema, triggerBadRequest } from "./validator.js";
 import ChatsModel from "./model.js";
 import createHttpError from "http-errors";
+import { JWTAuthMiddleware } from "../lib/auth/jwtAuth.js";
 
 const chatsRouter = express.Router();
 
 chatsRouter.post(
   "/",
+  JWTAuthMiddleware,
   checksChatsSchema,
   triggerBadRequest,
   async (req, res, next) => {
@@ -46,7 +48,7 @@ chatsRouter.post(
   }
 );
 
-chatsRouter.get("/", async (req, res, next) => {
+chatsRouter.get("/", JWTAuthMiddleware, async (req, res, next) => {
   try {
     const myChats = await ChatsModel.find({ users: { $all: req.user._id } });
     res.send(myChats);
@@ -56,7 +58,7 @@ chatsRouter.get("/", async (req, res, next) => {
   }
 });
 
-chatsRouter.get("/:chatId", async (req, res, next) => {
+chatsRouter.get("/:chatId", JWTAuthMiddleware, async (req, res, next) => {
   try {
     const chat = await ChatsModel.findById(req.params.chatId);
     if (chat) {
@@ -74,6 +76,7 @@ chatsRouter.get("/:chatId", async (req, res, next) => {
 
 chatsRouter.put(
   "/:chatId",
+  JWTAuthMiddleware,
   checksChatsSchema,
   triggerBadRequest,
   async (req, res, next) => {
@@ -100,7 +103,7 @@ chatsRouter.put(
   }
 );
 
-chatsRouter.delete("/:chatId", async (req, res, next) => {
+chatsRouter.delete("/:chatId", JWTAuthMiddleware, async (req, res, next) => {
   try {
     const deletedChat = await ChatsModel.findByIdAndDelete(req.params.chatId);
     if (deletedChat) {
