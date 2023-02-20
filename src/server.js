@@ -10,10 +10,9 @@ import {
 } from "./errorHandlers.js";
 import mongoose from "mongoose";
 
-import chatsRouter from "./chats/index.js";
+import chatsRouter from "./api/chats/index.js";
 
 import userRouter from "./api/users/index.js";
-
 
 const server = express();
 const port = process.env.PORT;
@@ -23,9 +22,7 @@ server.use(express.json());
 
 // ..................ENDPOINTS..................
 
-
 server.use("/chats", chatsRouter);
-
 
 server.use("/users", userRouter);
 
