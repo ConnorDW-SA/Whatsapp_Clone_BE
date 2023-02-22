@@ -14,9 +14,9 @@ const cloudinaryUpload = multer({
     cloudinary,
     params: {
       folder: "database",
-      format: "png"
-    }
-  })
+      format: "png",
+    },
+  }),
 }).single("avatar");
 
 const usersRouter = express.Router();
@@ -39,18 +39,20 @@ usersRouter.post("/register", async (req, res, next) => {
   try {
     const { username, password, email } = req.body;
     const existingUser = await UserModel.findOne({
-      $or: [{ email }, { username }]
+      $or: [{ email }, { username }],
     });
+    console.log(existingUser);
     if (existingUser) {
       return res
         .status(400)
         .send({ error: "Email or username already in use" });
+    } else {
+      const newUser = new UserModel({ username, password, email });
+      const { _id } = await newUser.save();
+      const payload = { _id: newUser._id };
+      const accessToken = await createAccessToken(payload);
+      res.status(201).send({ _id, accessToken });
     }
-    const newUser = new UserModel({ username, password, email });
-    const { _id } = await newUser.save();
-    const payload = { _id: newUser._id };
-    const accessToken = await createAccessToken(payload);
-    res.status(201).send({ _id, accessToken });
   } catch (error) {
     next(error);
   }
@@ -91,7 +93,7 @@ usersRouter.put("/me", JWTAuthMiddleware, async (req, res, next) => {
         req.body,
         {
           runValidators: true,
-          new: true
+          new: true,
         }
       );
       res.send(updated);
