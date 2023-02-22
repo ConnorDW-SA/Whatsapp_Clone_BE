@@ -33,7 +33,6 @@ UserSchema.methods.toJSON = function () {
 };
 
 UserSchema.static("findByCredentials", async function (email, password) {
-  console.log(this);
   const user = await this.findOne({ email });
 
   if (user) {

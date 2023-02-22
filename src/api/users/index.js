@@ -41,7 +41,7 @@ usersRouter.post("/register", async (req, res, next) => {
     const existingUser = await UserModel.findOne({
       $or: [{ email }, { username }],
     });
-    console.log(existingUser);
+
     if (existingUser) {
       return res
         .status(400)
@@ -146,7 +146,7 @@ usersRouter.post("/login", async (req, res, next) => {
   try {
     const { email, password } = req.body;
     const user = await UserModel.findByCredentials(email, password);
-    console.log(user);
+
     if (user) {
       const payload = { _id: user._id };
       const accessToken = await createAccessToken(payload);
