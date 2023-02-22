@@ -50,7 +50,9 @@ chatsRouter.post(
 
 chatsRouter.get("/", JWTAuthMiddleware, async (req, res, next) => {
   try {
-    const myChats = await ChatsModel.find({ users: { $all: req.user._id } });
+    const myChats = await ChatsModel.find({
+      users: { $all: req.user._id },
+    }).populate("users");
     res.send(myChats);
   } catch (error) {
     console.log(error);
