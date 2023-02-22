@@ -145,7 +145,8 @@ usersRouter.get(
 usersRouter.post("/login", async (req, res, next) => {
   try {
     const { email, password } = req.body;
-    const user = await UserModel.checkCredentials(email, password);
+    const user = await UserModel.findByCredentials(email, password);
+    console.log(user);
     if (user) {
       const payload = { _id: user._id };
       const accessToken = await createAccessToken(payload);

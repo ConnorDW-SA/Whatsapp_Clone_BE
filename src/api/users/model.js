@@ -8,16 +8,17 @@ const UserSchema = new Schema(
     username: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     email: { type: String, required: true, unique: true },
-    avatar: { type: String, required: false }
+    avatar: { type: String, required: false },
   },
   { timestamps: true }
 );
 
 UserSchema.pre("save", async function (next) {
-  const user = this;
-  if (!user.isModified("password")) {
-    const password = await bcrypt.hash(user.password, 10);
-    user.password = password;
+  const currentUser = this;
+  if (currentUser.isModified("password")) {
+    const plainPW = currentUser.password;
+    const hash = await bcrypt.hash(plainPW, 11);
+    currentUser.password = hash;
   }
   next();
 });
@@ -32,14 +33,20 @@ UserSchema.methods.toJSON = function () {
 };
 
 UserSchema.static("findByCredentials", async function (email, password) {
+  console.log(this);
   const user = await this.findOne({ email });
 
-  if (!user) {
-    throw new Error("Unable to login");
-  }
+  if (user) {
+    const passwordMatch = await bcrypt.compare(password, user.password);
 
-  const isMatch = await bcrypt.compare(password, user.password);
-  return isMatch ? user : null;
+    if (passwordMatch) {
+      return user;
+    } else {
+      return null;
+    }
+  } else {
+    return null;
+  }
 });
 
 export default mongoose.model("User", UserSchema);
