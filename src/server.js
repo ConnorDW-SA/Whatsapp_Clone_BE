@@ -6,12 +6,12 @@ import {
   notFoundHandler,
   badRequestHandler,
   unauthorizedHandler,
-  forbiddenErrorHandler
+  forbiddenErrorHandler,
 } from "./errorHandlers.js";
 import mongoose from "mongoose";
 
 import chatsRouter from "./api/chats/index.js";
-
+import messagesRouter from "./api/messages/index.js";
 import userRouter from "./api/users/index.js";
 
 const server = express();
@@ -23,7 +23,7 @@ server.use(express.json());
 // ..................ENDPOINTS..................
 
 server.use("/chats", chatsRouter);
-
+server.use("/messages", messagesRouter);
 server.use("/users", userRouter);
 
 // ..................ERROR HANDLERS............
