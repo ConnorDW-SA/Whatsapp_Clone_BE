@@ -5,9 +5,9 @@ import multer from "multer";
 import { CloudinaryStorage } from "multer-storage-cloudinary";
 import { v2 as cloudinary } from "cloudinary";
 import q2m from "query-to-mongo";
-import { JWTAuthMiddleware } from "../../auth/index.js";
+import { JWTAuthMiddleware } from "../lib/auth/jwtAuth.js";
 import passport from "passport";
-import { createAccessToken } from "../../auth/tools.js";
+import { createAccessToken } from "../lib/auth/tools.js";
 
 const cloudinaryUpload = multer({
   storage: new CloudinaryStorage({

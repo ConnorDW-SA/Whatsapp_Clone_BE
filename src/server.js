@@ -6,7 +6,7 @@ import {
   notFoundHandler,
   badRequestHandler,
   unauthorizedHandler,
-  forbiddenErrorHandler,
+  forbiddenErrorHandler
 } from "./errorHandlers.js";
 import mongoose from "mongoose";
 
