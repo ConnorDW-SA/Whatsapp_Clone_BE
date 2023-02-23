@@ -47,7 +47,13 @@ usersRouter.post("/register", async (req, res, next) => {
         .status(400)
         .send({ error: "Email or username already in use" });
     } else {
-      const newUser = new UserModel({ username, password, email });
+      const newUser = new UserModel({
+        username,
+        password,
+        email,
+        avatar: "",
+        about: `My name is ${username} and I am using WhatsApp.`,
+      });
       const { _id } = await newUser.save();
       const payload = { _id: newUser._id };
       const accessToken = await createAccessToken(payload);
