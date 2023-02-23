@@ -14,9 +14,9 @@ const cloudinaryUpload = multer({
     cloudinary,
     params: {
       folder: "database",
-      format: "png",
-    },
-  }),
+      format: "png"
+    }
+  })
 }).single("avatar");
 
 const usersRouter = express.Router();
@@ -39,7 +39,7 @@ usersRouter.post("/register", async (req, res, next) => {
   try {
     const { username, password, email } = req.body;
     const existingUser = await UserModel.findOne({
-      $or: [{ email }, { username }],
+      $or: [{ email }, { username }]
     });
 
     if (existingUser) {
@@ -52,7 +52,7 @@ usersRouter.post("/register", async (req, res, next) => {
         password,
         email,
         avatar: "",
-        about: `My name is ${username} and I am using WhatsApp.`,
+        about: `My name is ${username} and I am using WhatsApp.`
       });
       const { _id } = await newUser.save();
       const payload = { _id: newUser._id };
@@ -99,7 +99,7 @@ usersRouter.put("/me", JWTAuthMiddleware, async (req, res, next) => {
         req.body,
         {
           runValidators: true,
-          new: true,
+          new: true
         }
       );
       res.send(updated);
