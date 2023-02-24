@@ -13,12 +13,21 @@ import mongoose from "mongoose";
 import chatsRouter from "./api/chats/index.js";
 import messagesRouter from "./api/messages/index.js";
 import userRouter from "./api/users/index.js";
+import { Server } from "socket.io";
+import { createServer } from "http";
+import { newConnectionHandler } from "./socket/index.js";
 
 const server = express();
 const port = process.env.PORT;
 
 server.use(cors());
 server.use(express.json());
+
+//...................SOCKET IO..................
+const httpServer = createServer(server);
+const io = new Server(httpServer); // new Server() expects an HTTP server, not an express server. we create this above
+
+io.on("connection", newConnectionHandler); // connection is a reserved keyword for socket
 
 // ..................ENDPOINTS..................
 
@@ -38,7 +47,8 @@ mongoose.connect(process.env.MONGODB_URL);
 
 mongoose.connection.on("connected", () => {
   console.log("Connection established to Mongo");
-  server.listen(port, () => {
+  httpServer.listen(port, () => {
+    // here we MUST listen with the http server!!!
     console.table(listEndpoints(server));
     console.log("Server listening on port " + port);
   });
