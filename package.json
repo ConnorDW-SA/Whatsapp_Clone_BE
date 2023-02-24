@@ -1,7 +1,6 @@
 {
   "name": "whatsapp_clone_be",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "type": "module",
   "scripts": {
@@ -34,10 +33,13 @@
     "multer-storage-cloudinary": "^4.0.0",
     "passport": "^0.6.0",
     "passport-google-oauth20": "^2.0.0",
-    "pdfmake": "^0.2.7"
+    "pdfmake": "^0.2.7",
+    "query-to-mongo": "^0.10.2",
+    "socket.io": "^4.6.1"
   },
   "devDependencies": {
     "dotenv": "^16.0.3",
     "nodemon": "^2.0.20"
-  }
+  },
+  "description": ""
 }
