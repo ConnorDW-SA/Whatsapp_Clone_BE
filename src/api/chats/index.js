@@ -62,7 +62,7 @@ chatsRouter.get("/", JWTAuthMiddleware, async (req, res, next) => {
 
 chatsRouter.get("/:chatId", JWTAuthMiddleware, async (req, res, next) => {
   try {
-    const chat = await ChatsModel.findById(req.params.chatId);
+    const chat = await ChatsModel.findById(req.params.chatId).populate("users");
     if (chat) {
       res.send(chat);
     } else {
