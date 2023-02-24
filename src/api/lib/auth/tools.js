@@ -13,10 +13,12 @@ export const createAccessToken = (payload) =>
     )
   );
 
-export const verifyAccessToken = (token) =>
-  new Promise((resolve, reject) =>
+export function verifyAccessToken(token) {
+  console.log(token, process.env.JWT_SECRET);
+  return new Promise((resolve, reject) =>
     jwt.verify(token, process.env.JWT_SECRET, (err, originalPayload) => {
       if (err) reject(err);
       else resolve(originalPayload);
     })
   );
+}
